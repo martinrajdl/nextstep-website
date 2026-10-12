@@ -15,7 +15,7 @@
     "preview": "node scripts/serve.mjs --built",
     "test": "node --test tests/build.test.mjs",
     "test:e2e": "pnpm build && playwright test",
-    "check": "node --check src/site.js && node --check scripts/build.mjs && node --check scripts/serve.mjs",
+    "check": "node --check src/site.js && node --check src/theme.js && node --check src/play.js && node --check src/orbit.js && node --check scripts/build.mjs && node --check scripts/serve.mjs",
     "social:build": "node scripts/social-image.mjs"
   },
   "devDependencies": {

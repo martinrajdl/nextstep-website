@@ -34,7 +34,7 @@ export function build({
   mkdirSync(output, { recursive: true });
   rmSync(resolve(output,'sitemap.xml'),{force:true});
   rmSync(resolve(output,'mark.svg'),{force:true});
-  const files = ['index.html', 'style.css', 'site.js', 'app-icon.png', 'favicon.png', '404.html'];
+  const files = ['index.html', 'style.css', 'site.js', 'theme.js', 'play.js', 'orbit.js', 'app-icon.png', 'favicon.png', '404.html'];
   if (existsSync(resolve(root, 'src/social-preview.png')))
     files.push('social-preview.png');
   for (const file of files)

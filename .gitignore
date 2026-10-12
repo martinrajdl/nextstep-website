@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.vercel/
+.runtime/
+test-results/
+playwright-report/
+.env*
+.DS_Store
+*.log

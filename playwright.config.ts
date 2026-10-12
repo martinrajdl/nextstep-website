@@ -12,7 +12,7 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     trace: 'retain-on-failure',
   },
-  webServer: {
+  webServer: process.env.TEST_SITE_URL ? undefined : {
     command: 'node scripts/serve.mjs --built',
     env: { PORT: '4335' },
     url: 'http://127.0.0.1:4335',

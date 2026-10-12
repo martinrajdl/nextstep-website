@@ -1,10 +1,11 @@
 import { test, expect } from '@playwright/test';
-const site = 'http://127.0.0.1:4335';
+const site = process.env.TEST_SITE_URL || 'http://127.0.0.1:4335';
 test('public website demonstrates schemas and review with fictional data and no app API', async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   const requests: string[] = [];
   page.on('request', (request) => requests.push(request.url()));
   await page.goto(site);

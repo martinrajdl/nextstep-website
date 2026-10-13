@@ -114,4 +114,50 @@ test('day and night remain usable on a narrow mobile screen', async ({ page }) =
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.evaluate(() => scrollTo(0, 0));
   await page.screenshot({ path: 'test-results/mobile-night.png', fullPage: true });
+  await page.setViewportSize({ width: 320, height: 780 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await expect(page.getByRole('button', { name: 'Switch to light mode' })).toBeInViewport();
+});
+
+test('hand-drawn arrows redraw on click and stay still with reduced motion', async ({page}) => {
+  await page.goto(site);
+  const arrows = page.locator('.doodle');
+  await expect(arrows).toHaveCount(5);
+  const arrow = page.getByRole('button',{name:'Redraw the playground arrow',exact:true});
+  await arrow.scrollIntoViewIfNeeded();
+  await arrow.click();
+  expect(await arrow.evaluate(node => node.getAnimations({subtree:true}).some(animation => animation.playState === 'running'))).toBe(true);
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await arrow.click();
+  expect(await arrow.evaluate(node => node.getAnimations({subtree:true}).length)).toBe(0);
+  await page.setViewportSize({width:390,height:844});
+  await expect(arrow).toBeVisible();
+  await arrow.click();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.getByRole('button',{name:'Redraw the next step arrow',exact:true}).click();
+  await page.screenshot({path:'test-results/doodle-mobile.png'});
+});
+
+test('hero actions keep their size and position and principle cards have space around their content', async ({page}) => {
+  await page.goto(site);
+  const button = page.locator('.hero-actions .download-link');
+  await button.scrollIntoViewIfNeeded();
+  await expect(button).toBeVisible();
+  await page.waitForTimeout(800);
+  const before = await button.boundingBox();
+  await button.hover();
+  await page.waitForTimeout(250);
+  expect(await button.boundingBox()).toEqual(before);
+  const cards = page.locator('.principles-grid article');
+  await cards.first().scrollIntoViewIfNeeded();
+  await cards.first().hover();
+  for (const card of await cards.all()) {
+    expect(await card.evaluate(node => parseFloat(getComputedStyle(node).paddingLeft))).toBeGreaterThanOrEqual(24);
+    await expect.poll(() => card.evaluate(node => new DOMMatrixReadOnly(getComputedStyle(node).transform).isIdentity)).toBe(true);
+  }
+  await page.screenshot({path:'test-results/principles-desktop.png'});
+  await page.setViewportSize({width:390,height:844});
+  await cards.first().scrollIntoViewIfNeeded();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({path:'test-results/principles-mobile.png'});
 });

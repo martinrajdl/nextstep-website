@@ -13,12 +13,16 @@
     "dev": "node scripts/serve.mjs",
     "build": "node scripts/build.mjs",
     "preview": "node scripts/serve.mjs --built",
-    "test": "node --test tests/build.test.mjs",
+    "test": "node --test tests/build.test.mjs tests/usage.test.mjs",
+    "stats": "node scripts/stats.mjs",
     "test:e2e": "pnpm build && playwright test",
-    "check": "node --check src/site.js && node --check src/theme.js && node --check src/play.js && node --check src/orbit.js && node --check scripts/build.mjs && node --check scripts/serve.mjs",
+    "check": "node --check src/site.js && node --check src/theme.js && node --check src/play.js && node --check src/orbit.js && node --check scripts/build.mjs && node --check scripts/serve.mjs && node --check api/usage.js && node --check api/usage-cleanup.js && node --check server/usage.mjs && node --check scripts/stats.mjs",
     "social:build": "node scripts/social-image.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.58.2"
+  },
+  "dependencies": {
+    "@vercel/blob": "2.8.1"
   }
 }

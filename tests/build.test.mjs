@@ -18,7 +18,7 @@ test('static build only publishes marketing assets, with correct canonical and s
     );
     assert.ok(
       !readdirSync(output).some((name) =>
-        /sqlite|env|data|runtime|git/.test(name),
+        /sqlite|env|data|runtime|git|^api$|^server$/.test(name),
       ),
     );
     assert.ok(html.includes('Nextstep-0.4.0-macOS-arm64.zip'));

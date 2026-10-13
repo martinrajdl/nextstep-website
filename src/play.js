@@ -2,8 +2,54 @@
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
 
+  // Ink draws once on arrival, then again when invited. No idle animation loop.
+  const doodles = [...document.querySelectorAll('.doodle')];
+  const inkAnimations = new Map();
+  function settleDoodle(doodle) {
+    inkAnimations.get(doodle)?.forEach(animation => animation.cancel());
+    inkAnimations.delete(doodle);
+  }
+  function drawDoodle(doodle) {
+    settleDoodle(doodle);
+    if (motion.matches || document.hidden) return;
+    const animations = [...doodle.querySelectorAll('path')].map((path, index) =>
+      path.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], {
+        duration: index ? 280 : 1250, delay: index ? 1080 : 0,
+        easing: 'cubic-bezier(.45,0,.25,1)', fill: 'backwards',
+      }),
+    );
+    animations.push(doodle.querySelector('.doodle-ink').animate([
+      { transform: 'translateY(0) rotate(0deg)' },
+      { transform: 'translateY(-4px) rotate(-4deg)', offset: 0.35 },
+      { transform: 'translateY(2px) rotate(2deg)', offset: 0.72 },
+      { transform: 'translateY(0) rotate(0deg)' },
+    ], { duration: 900, delay: 1200, easing: 'ease-in-out' }));
+    inkAnimations.set(doodle, animations);
+  }
+  const doodleObserver = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        drawDoodle(entry.target);
+        doodleObserver.unobserve(entry.target);
+      }
+    }
+  }, { threshold: 0.6 });
+  for (const doodle of doodles) {
+    doodleObserver.observe(doodle);
+    doodle.addEventListener('pointerenter', () => {
+      if (finePointer.matches) drawDoodle(doodle);
+    });
+    doodle.addEventListener('click', () => drawDoodle(doodle));
+  }
+  motion.addEventListener('change', () => {
+    if (motion.matches) doodles.forEach(settleDoodle);
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) doodles.forEach(settleDoodle);
+  });
+
   // Follow the pointer on the small illustrations, without moving the page layout.
-  document.querySelectorAll('.mini-brief, .mini-schema, .mini-review, .principles-grid article').forEach(card => {
+  document.querySelectorAll('.mini-brief, .mini-schema, .mini-review').forEach(card => {
     card.classList.add('pointer-card');
     card.addEventListener('pointermove', event => {
       if (motion.matches || !finePointer.matches) return;
@@ -18,22 +64,6 @@
     card.addEventListener('pointerleave', () => {
       card.style.setProperty('--tilt-x', '0deg');
       card.style.setProperty('--tilt-y', '0deg');
-    });
-  });
-
-  // A click has a small physical response. Links and native button behavior stay intact.
-  document.querySelectorAll('.button, #cycle-play, .shape-options button').forEach(button => {
-    button.classList.add('has-ripple');
-    button.addEventListener('pointerdown', event => {
-      if (motion.matches) return;
-      const box = button.getBoundingClientRect();
-      const ripple = document.createElement('span');
-      ripple.className = 'click-ripple';
-      ripple.setAttribute('aria-hidden', 'true');
-      ripple.style.left = `${event.clientX - box.left}px`;
-      ripple.style.top = `${event.clientY - box.top}px`;
-      button.append(ripple);
-      setTimeout(() => ripple.remove(), 650);
     });
   });
 

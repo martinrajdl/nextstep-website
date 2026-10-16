@@ -35,7 +35,7 @@ To deploy from an authenticated Vercel CLI, run `vercel` from this repository fo
 - `scripts/build.mjs`: an explicit static asset allowlist and optional production URL metadata.
 - `scripts/serve.mjs`: local-only development and production preview server.
 
-The interactive example is reset on reload. All names and organizations shown in it are fictional. Download links target the signed, notarized macOS Apple silicon release of Nextstep 0.4.0. Keep the asset URLs and release copy aligned with verified GitHub releases. The animated agent walkthrough pauses at review; only explicit approval adds its fictional contact. Motion respects reduced-motion preferences and playback pauses when the tab is hidden.
+The interactive example is reset on reload. All names and organizations shown in it are fictional. Download links target the signed, notarized macOS Apple silicon release of Nextstep 0.4.1. Keep the asset URLs and release copy aligned with verified GitHub releases. The animated agent walkthrough pauses at review; only explicit approval adds its fictional contact. Motion respects reduced-motion preferences and playback pauses when the tab is hidden.
 
 Appearance defaults to dark from 20:00 to 07:00 in the visitor's local time, including while the page remains open. The header sun/moon button saves a manual choice in local storage; **Auto** in the footer restores the schedule. Theme changes use a circular reveal when supported, with an immediate fallback for reduced motion or older browsers. No appearance preference is sent to a server.
 

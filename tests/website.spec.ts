@@ -102,7 +102,7 @@ test('agent walkthrough pauses for a real review and respects manual controls', 
   await page.getByRole('button', { name: /Reset example/ }).click();
   await expect(page.locator('#demo-table')).not.toContainText('Alex Rivera');
   await expect(page.locator('#cycle-status')).toHaveText('YOUR DIRECTION');
-  await expect(page.locator('.download-link').first()).toHaveAttribute('href', 'https://github.com/martinrajdl/nextstep/releases/download/v0.4.0/Nextstep-0.4.0-macOS-arm64.zip');
+  await expect(page.locator('.download-link').first()).toHaveAttribute('href', 'https://github.com/martinrajdl/nextstep/releases/download/v0.4.1/Nextstep-0.4.1-macOS-arm64.zip');
 });
 
 test('reduced motion keeps the entire walkthrough usable without decorative animation', async ({ page }) => {

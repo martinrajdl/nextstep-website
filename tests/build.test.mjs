@@ -21,7 +21,7 @@ test('static build only publishes marketing assets, with correct canonical and s
         /sqlite|env|data|runtime|git|^api$|^server$/.test(name),
       ),
     );
-    assert.ok(html.includes('Nextstep-0.4.0-macOS-arm64.zip'));
+    assert.ok(html.includes('Nextstep-0.4.1-macOS-arm64.zip'));
     assert.ok(!html.includes('DEVELOPMENT PREVIEW'));
     build({output,siteUrl:''});
     assert.equal(existsSync(join(output,'sitemap.xml')),false);
